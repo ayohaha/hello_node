@@ -1,0 +1,13 @@
+#noticeAddRegister
+  script(src='/socket.io/socket.io.js')
+    script
+      var sockets = io.connect()
+      sockets.on('init',function(msg){
+      alert(msg.msg)
+      })
+      console.log('message:~');
+      sockets.emit('noticeAddRegister', 'ㅠㅠ');
+      sockets.on('noticeAddRegister', function(msg){
+      console.log(msg);
+      $("#noticeAddRegister").html(msg);
+      });
