@@ -42,6 +42,7 @@ block scripts
 		});
 	
 		sockets.on('denyAddRegister', function(result){	
-			alert(result.country + '지역을 ' + result.user +"님이 신청하셨습니다. ");
+			//ert(result.country + '지역을 ' + result.user +"님이 신청하셨습니다. ");
+			$('button[type="button"][value='+result.country+']').prop("disabled",true);
 			$("#noticeAddRegister").html('지역:' + result.country + ' :사용자: ' + result.user );
 		});

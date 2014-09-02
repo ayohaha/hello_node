@@ -16,7 +16,7 @@
 	"private": true,
 	"dependencies": {
 		"express": "3.0.6",
-		"socket.io": "1.0.2"		
+		"socket.io": "1.0.2",		
 		"stylus": "0.31.0",
 		"jade": "0.27.7",
 		"mongodb": "1.2.7",

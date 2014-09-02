@@ -231,7 +231,6 @@ module.exports = function(app, io) {
 			email 		: req.param('email'),
 			country 	: req.param('country'),
 			team 		: req.param('team'),
-			schoolNme	: req.param('schoolNme'),
 			mobile		: req.param('mobile'),
 			number		: 1 // 회차 
 		}, function(e, obj){
@@ -242,7 +241,8 @@ module.exports = function(app, io) {
 			} else {
 				console.log('Success');
 				//console.log(obj);
-				io.emit('noticeAddRegister', req.param('country') +  '성공했습니다.');
+				io.emit('noticeAddRegister', req.param('country') +  '성공했습니다.'	);
+				
 				io.emit('denyAddRegister', {
 					user 		: req.param('user'),
 					name 		: req.param('name'),
@@ -253,11 +253,14 @@ module.exports = function(app, io) {
 					mobile		: req.param('mobile'),
 					number		: 1 // 회차 
 				});
+			
 				res.redirect('/registerList');
 			}
+			
+		});
 
-	    });
-	});	
+	});
+
 	
 	
 	app.get('/registerList', function(req, res) {

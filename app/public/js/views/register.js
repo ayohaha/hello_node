@@ -44,8 +44,7 @@ $(document).ready(function(){
 				'name' : $("#userName").val(),
 				'email': $("#userEmail").val(),
 				'team': 'eWebOne',
-				'country': $(this).parent().siblings(".hall_country").text(),
-				'schoolNme': $(this).parent().siblings(".hall_name").text()
+				'country': $(this).val()
 				
 		};
 		console.log(register);
