@@ -8,7 +8,7 @@ var dbPort 		= 27017;
 var dbHost 		= 'localhost';
 var dbName 		= 'node-login';
 
-var EX = require('./exam-list');
+
 
 /* establish the database connection */
 
@@ -22,6 +22,29 @@ var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}),
 });
 var register = db.collection('register');
 var gosainfo     = db.collection('gosainfo');
+var examhall     = db.collection('examhall');
+
+// 해당 출석고사 회차 신청지역정보 가져오기 
+exports.getAllExamHall = function(callback)
+{
+	examhall.find().toArray(
+		function(e, res) {
+		if (e) callback(e)
+		else callback(null, res)
+	});
+};
+
+// 신청한 지역 상태 변경 
+exports.updateCountryAbleYn = function(newData, callback)
+{	
+
+	examhall.update({country:newData.country, ableYn:"Y",number:newData.number}, {$set:{ableYn:"N"}}, function(err) {
+		if (err) callback(err);
+		else callback(null);
+	});
+
+}
+
 
 //시험 신청 Data중 Active 최근 1건 가져오기 
 //신청 가능 시간과 현제시간 비교하기

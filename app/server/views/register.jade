@@ -11,7 +11,7 @@ table#account-form-container
 	tr
 	each hall in examhall
 		td 
-			button.BtnAddRegister.btn.btn-warning.regiBtn(type='button',value=hall.country)=hall.country
+			button.BtnAddRegister.btn.btn-warning.regiBtn(type='button',value=hall.country,data-ableYn=hall.ableYn)=hall.country
 
 
 include modals/form-errors

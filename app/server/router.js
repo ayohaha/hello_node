@@ -199,16 +199,20 @@ module.exports = function(app, io) {
 	    	//@todo 출석고사 가능한지 체크
 	    	
 	    	RM.isAllowRegister(function(obj){
-	    		console.log('obj~~');
-
+	    		
 		    	if(obj.isAllowRegister === true) {
 		    		//console.log('isAllowRegister ' + isAllowRegister);
-		    		res.render('register_form', {
-						title: '출석고사를 신청합니다.',
-						countries : CT,
-						examhall : EH,					
-						udata : req.session.user
-					});
+		    		
+		    		RM.getAllExamHall(function(e, obj){
+		    			res.render('register_form', {
+							title: '출석고사를 신청합니다.',
+							//countries : CT,
+							examhall : obj,	
+							udata : req.session.user
+						});
+					
+				    });
+		    		
 		    	} else {
 		    		console.log('isAllowRegister11 ' + obj.isAllowRegister);
 		    		res.render('register_info', {
@@ -240,21 +244,34 @@ module.exports = function(app, io) {
 				io.emit('noticeAddRegister', '실패했습니다.');
 			} else {
 				console.log('Success');
-				//console.log(obj);
-				io.emit('noticeAddRegister', req.param('country') +  '성공했습니다.'	);
 				
-				io.emit('denyAddRegister', {
-					user 		: req.param('user'),
-					name 		: req.param('name'),
-					email 		: req.param('email'),
+				RM.updateCountryAbleYn({
 					country 	: req.param('country'),
-					team 		: req.param('team'),
-					schoolNme	: req.param('schoolNme'),
-					mobile		: req.param('mobile'),
 					number		: 1 // 회차 
+				}, function(e, o){
+					if (e){
+						res.send('error-updating-examhall', 400);
+					}	else{
+						
+						console.log('Update Success!!');
+						io.emit('noticeAddRegister', req.param('country') +  '성공했습니다.'	);
+						
+						io.emit('denyAddRegister', {
+							user 		: req.param('user'),
+							name 		: req.param('name'),
+							email 		: req.param('email'),
+							country 	: req.param('country'),
+							team 		: req.param('team'),
+							schoolNme	: req.param('schoolNme'),
+							mobile		: req.param('mobile'),
+							number		: 1 // 회차 
+						});
+					
+						res.redirect('/registerList');
+					}
 				});
-			
-				res.redirect('/registerList');
+				
+
 			}
 			
 		});
