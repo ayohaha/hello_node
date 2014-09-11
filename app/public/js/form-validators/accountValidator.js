@@ -3,8 +3,8 @@ function AccountValidator(){
 
 // build array maps of the form inputs & control groups //
 
-	this.formFields = [$('#name-tf'), $('#email-tf'), $('#user-tf'), $('#pass-tf')];
-	this.controlGroups = [$('#name-cg'), $('#email-cg'), $('#user-cg'), $('#pass-cg')];
+	this.formFields = [$('#name-tf'), $('#email-tf'), $('#mobile-tf'), $('#team-tf'), $('#user-tf'), $('#pass-tf')];
+	this.controlGroups = [$('#name-cg'), $('#email-cg'), $('#mobile-cg'), $('#team-cg'),  $('#user-cg'), $('#pass-cg')];
 	
 // bind the form-error modal window to this controller to display any errors //
 	
@@ -24,6 +24,16 @@ function AccountValidator(){
 		}	else{
 			return s.length >= 6;
 		}
+	}
+	
+	this.validateMobile = function(s)
+	{
+		return s.length >= 3;
+	}
+	
+	this.validateTeam = function(s)
+	{
+		return true;
 	}
 	
 	this.validateEmail = function(e)
@@ -49,6 +59,12 @@ AccountValidator.prototype.showInvalidEmail = function()
 	this.showErrors(['That email address is already in use.']);
 }
 
+AccountValidator.prototype.showInvalidMobile = function()
+{
+	this.controlGroups[2].addClass('error');
+	this.showErrors(['That mobile is already in use.']);
+}
+
 AccountValidator.prototype.showInvalidUserName = function()
 {
 	this.controlGroups[2].addClass('error');
@@ -60,17 +76,24 @@ AccountValidator.prototype.validateForm = function()
 	var e = [];
 	for (var i=0; i < this.controlGroups.length; i++) this.controlGroups[i].removeClass('error');
 	if (this.validateName(this.formFields[0].val()) == false) {
-		this.controlGroups[0].addClass('error'); e.push('Please Enter Your Name');
+		this.controlGroups[0].addClass('error'); e.push('Please Enter Your ID');
 	}
 	if (this.validateEmail(this.formFields[1].val()) == false) {
 		this.controlGroups[1].addClass('error'); e.push('Please Enter A Valid Email');
 	}
-	if (this.validateName(this.formFields[2].val()) == false) {
-		this.controlGroups[2].addClass('error');
+	if (this.validateMobile(this.formFields[2].val()) == false) {
+		this.controlGroups[2].addClass('error'); e.push('Please Enter Mobile');
+	}
+	if (this.validateTeam(this.formFields[3].val()) == false) {
+		this.controlGroups[3].addClass('error');
+		e.push('Please Choose Team');
+	}
+	if (this.validateName(this.formFields[4].val()) == false) {
+		this.controlGroups[4].addClass('error');
 		e.push('Please Choose A Username');
 	}
-	if (this.validatePassword(this.formFields[3].val()) == false) {
-		this.controlGroups[3].addClass('error');
+	if (this.validatePassword(this.formFields[5].val()) == false) {
+		this.controlGroups[5].addClass('error');
 		e.push('Password Should Be At Least 6 Characters');
 	}
 	if (e.length) this.showErrors(e);

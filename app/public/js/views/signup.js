@@ -16,7 +16,10 @@ $(document).ready(function(){
 			    av.showInvalidEmail();
 			}	else if (e.responseText == 'username-taken'){
 			    av.showInvalidUserName();
+			}	else if (e.responseText == 'mobile-taken'){
+			    av.showInvalidMobile();
 			}
+			
 		}
 	});
 	$('#name-tf').focus();

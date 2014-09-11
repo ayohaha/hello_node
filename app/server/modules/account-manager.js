@@ -62,11 +62,17 @@ exports.addNewAccount = function(newData, callback)
 				if (o){
 					callback('email-taken');
 				}	else{
-					saltAndHash(newData.pass, function(hash){
-						newData.pass = hash;
-					// append date stamp when record was created //
-						newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-						accounts.insert(newData, {safe: true}, callback);
+					accounts.findOne({mobile:newData.mobile}, function(e, o) {
+						if (o){
+							callback('mobile-taken');
+						}	else{
+							saltAndHash(newData.pass, function(hash){
+								newData.pass = hash;
+							// append date stamp when record was created //
+								newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
+								accounts.insert(newData, {safe: true}, callback);
+							});
+						}
 					});
 				}
 			});
@@ -79,7 +85,8 @@ exports.updateAccount = function(newData, callback)
 	accounts.findOne({user:newData.user}, function(e, o){
 		o.name 		= newData.name;
 		o.email 	= newData.email;
-		o.country 	= newData.country;
+		o.mobile 	= newData.mobile;
+		o.team 		= newData.team;
 		if (newData.pass == ''){
 			accounts.save(o, {safe: true}, function(err) {
 				if (err) callback(err);

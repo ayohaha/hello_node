@@ -18,16 +18,16 @@ input(type='hidden', value= user._id)#userId
 				label.control-label(for='email-tf') Email
 				.controls
 					input#email-tf.input-xlarge(type='text', name='email', value= user.email)
-			#email-cg.control-group
+			#mobile-cg.control-group
 				label.control-label(for='mobile-tf') Mobile
 				.controls
 					input#mobile-tf.input-xlarge(type='text', name='mobile', value= user.mobile, maxlength=11)					
-			#clist-cg.control-group
-				label.control-label(for='country-list') Team
+			#team-cg.control-group
+				label.control-label(for='team-tf') Team
 				.controls
-					select#country-list(name='country')
-						each item in countries
-							option(selected=item.name == user.country)= item.name
+					select#team-list(name='team')
+						each item in teams
+							option(selected=item.name == user.team)= item.name
 			
 			hr
 			p#sub2.subheading

@@ -1,5 +1,5 @@
 
-var CT = require('./modules/country-list');
+var TL = require('./modules/team-list');
 var AM = require('./modules/account-manager');
 var RM = require('./modules/register-manager');
 var EM = require('./modules/email-dispatcher');
@@ -54,7 +54,7 @@ module.exports = function(app, io) {
 	    }   else{
 			res.render('home', {
 				title : 'Control Panel',
-				countries : CT,
+				teams : TL,
 				udata : req.session.user
 			});
 	    }
@@ -66,7 +66,7 @@ module.exports = function(app, io) {
 				user 		: req.param('user'),
 				name 		: req.param('name'),
 				email 		: req.param('email'),
-				country 	: req.param('country'),
+				mobile    	: req.param('mobile'),
 				team 		: req.param('team'),
 				pass		: req.param('pass')
 			}, function(e, o){
@@ -92,7 +92,7 @@ module.exports = function(app, io) {
 // creating new accounts //
 	
 	app.get('/signup', function(req, res) {
-		res.render('signup', {  title: 'Signup', countries : CT });
+		res.render('signup', {  title: 'Signup', teams : TL });
 	});
 	
 	app.post('/signup', function(req, res){
@@ -101,8 +101,8 @@ module.exports = function(app, io) {
 			email 	: req.param('email'),
 			user 	: req.param('user'),
 			pass	: req.param('pass'),
-			country : req.param('country'),
-			team     : req.param('team')
+			mobile  : req.param('mobile'),
+			team    : req.param('team')
 		}, function(e){
 			if (e){
 				res.send(e, 400);
@@ -199,13 +199,12 @@ module.exports = function(app, io) {
 	    	//@todo 출석고사 가능한지 체크
 	    	
 	    	RM.isAllowRegister(function(obj){
-	    		console.log('obj~~');
 
 		    	if(obj.isAllowRegister === true) {
 		    		//console.log('isAllowRegister ' + isAllowRegister);
 		    		res.render('register_form', {
 						title: '출석고사를 신청합니다.',
-						countries : CT,
+						teams : TL,
 						examhall : EH,					
 						udata : req.session.user
 					});
@@ -272,7 +271,7 @@ module.exports = function(app, io) {
 				RM.getAllRecords(function(e, obj){
 					res.render('register_list', {
 						title: '신청리스트',
-					//	countries : CT,
+					//	countries : TL,
 						list : obj,
 						udata : req.session.user
 					});
