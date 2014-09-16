@@ -1,5 +1,5 @@
 
-$(document).ready(function(){
+$(document).ready(function(){	
 	
 	var av = new AccountValidator();
 	var sc = new RegisterController();
@@ -55,4 +55,6 @@ $(document).ready(function(){
 			  console.log( data ); 
 			}, "json");
 	});
+	
+	$('button[type="button"][data-ableYn=N]').prop("disabled",true);
 })

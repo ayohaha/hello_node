@@ -202,12 +202,17 @@ module.exports = function(app, io) {
 
 		    	if(obj.isAllowRegister === true) {
 		    		//console.log('isAllowRegister ' + isAllowRegister);
-		    		res.render('register_form', {
-						title: '출석고사를 신청합니다.',
-						teams : TL,
-						examhall : EH,					
-						udata : req.session.user
-					});
+		    		
+		    		RM.getAllExamHall(function(e, obj){
+		    			res.render('register_form', {
+							title: '출석고사를 신청합니다.',
+							//countries : CT,
+							examhall : obj,	
+							udata : req.session.user
+						});
+					
+				    });
+		    		
 		    	} else {
 		    		console.log('isAllowRegister11 ' + obj.isAllowRegister);
 		    		res.render('register_info', {
