@@ -291,10 +291,12 @@ module.exports = function(app, io) {
 				udata : req.session.user
 			});
 	})
+
+	app.get('/waiting', function(req, res) { 
+		res.render('waiting', { title: 'waiting'}); 
+	});
 	
 	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
-
-	
 
 	
 };
