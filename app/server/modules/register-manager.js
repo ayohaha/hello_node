@@ -35,10 +35,9 @@ exports.getAllExamHall = function(callback)
 };
 
 // 신청한 지역 상태 변경 
-exports.updateCountryAbleYn = function(newData, callback)
+exports.updateCountryAbleYn = function(data, callback)
 {	
-
-	examhall.update({country:newData.country, ableYn:"Y",number:newData.number}, {$set:{ableYn:"N"}}, function(err) {
+	examhall.update({country:data.country}, {$set:{ableYn:data.ableYn}}, function(err) {
 		if (err) callback(err);
 		else callback(null);
 	});
@@ -51,15 +50,18 @@ exports.updateCountryAbleYn = function(newData, callback)
 //진행중 : 'true', 대기 : 'false'
 exports.isAllowRegister = function(callback){
 	gosainfo.findOne({status:'Active'}, function(e,o){
-
-		if (o.startDate < moment().format('YYYY-MM-DD hh:mm:ss')) {
-			callback({isAllowRegister:true,
-				      info:o});
+		if(o == null) {
+			callback({isAllowRegister:false});
 		} else {
-			//console.log( 'dddd' + moment().format('YYYY-MM-DD hh:mm:ss'));
-			callback({isAllowRegister:false,
-			      info:o});
-		}	
+			if (o.startDate < moment().format('YYYY-MM-DD hh:mm:ss') ) {
+				callback({isAllowRegister:true,
+					      info:o});
+			} else {
+				//console.log( 'dddd' + moment().format('YYYY-MM-DD hh:mm:ss'));
+				callback({isAllowRegister:false});
+			}
+		}
+
 	});
 	
 }
@@ -124,11 +126,12 @@ exports.updateAccount = function(newData, callback)
 }
 
 
-/* account lookup methods */
-
-exports.deleteAccount = function(id, callback)
+//취소하기 
+exports.deleteRegister = function(RegisterData, callback)
 {
-	register.remove({_id: getObjectId(id)}, callback);
+	register.remove({user: RegisterData.user, email: RegisterData.email, country:RegisterData.country}, function(err, numberOfRemovedDocs) {
+		callback(err, numberOfRemovedDocs);
+	});
 }
 
 exports.getAccountByEmail = function(email, callback)
