@@ -215,8 +215,8 @@ module.exports = function(app, io) {
 		    		
 		    	} else {
 		    		console.log('isAllowRegister11 ' + obj.isAllowRegister);
-		    		res.render('register_info', {
-						title: 'register_info',					
+		    		res.render('waiting', {
+						title: 'waiting',					
 						udata : req.session.user
 					});
 		    		
@@ -273,15 +273,33 @@ module.exports = function(app, io) {
 		        res.redirect('/');
 		    }   else{		    
 
-				RM.getAllRecords(function(e, obj){
-					res.render('register_list', {
-						title: '신청리스트',
-					//	countries : TL,
-						list : obj,
-						udata : req.session.user
-					});
-				
-			    });								
+		    	RM.isAllowRegister(function(obj){
+
+			    	if(obj.isAllowRegister === true) {
+			    		//console.log('isAllowRegister ' + isAllowRegister);
+			    		
+						RM.getAllRecords(function(e, obj){
+							res.render('register_list', {
+								title: '신청리스트',
+							//	countries : TL,
+								list : obj,
+								udata : req.session.user
+							});
+						
+					    });		
+			    		
+			    	} else {
+			    		console.log('isAllowRegister11 ' + obj.isAllowRegister);
+			    		res.render('waiting', {
+							title: 'waiting',					
+							udata : req.session.user
+						});
+			    		
+			    	}
+			    });
+		    	
+		    	
+						
 		    }
 			
 		});
