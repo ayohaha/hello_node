@@ -20,28 +20,30 @@ module.exports = function(app, io) {
 		}	else{
 	// attempt automatic login //
 			AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
-				if (o != null){
-				    req.session.user = o;
+				if (!o){
+					req.session.user = o;
 					res.redirect('/register');
 				}	else{
 					res.render('login', { title: 'Hello - Please Login To Your Account' });
-				}
+				}	
 			});
 		}
 	});
 	
 	app.post('/', function(req, res){
 		AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
-			if (!o){
-				res.send(e, 400);
-			}	else{
-			    req.session.user = o;
-				if (req.param('remember-me') == 'true'){
-					res.cookie('user', o.user, { maxAge: 900000 });
-					res.cookie('pass', o.pass, { maxAge: 900000 });
+				if (!o){
+					res.send(e, 400);
+				}	else{
+				    req.session.user = o;
+					if (req.param('remember-me') == 'true'){
+						res.cookie('user', o.user, { maxAge: 900000 });
+						res.cookie('pass', o.pass, { maxAge: 900000 });
+					}
+					res.cookie('is_admin', o.is_admin, { maxAge: 900000 });
+					res.send(o.is_admin, 200);
+
 				}
-				res.send(o, 200);
-			}
 		});
 	});
 	
@@ -294,7 +296,7 @@ module.exports = function(app, io) {
 
 	app.get('/waiting', function(req, res) { 
 		res.render('waiting', { title: 'waiting'}); 
-	});
+	});  
 	
 	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
 
