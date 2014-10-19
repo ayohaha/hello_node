@@ -40,7 +40,10 @@ block scripts
 			alert(result.msg);
 			document.location.href=result.page;
 		});
-	
+		sockets.on('ActiveAddRegister', function(result){	
+			//ert(result.country + '지역을 ' + result.user +"님이 신청하셨습니다. ");
+			$('button[type="button"][value='+result.country+']').prop("disabled",false);
+		});
 		sockets.on('denyAddRegister', function(result){	
 			//ert(result.country + '지역을 ' + result.user +"님이 신청하셨습니다. ");
 			$('button[type="button"][value='+result.country+']').prop("disabled",true);

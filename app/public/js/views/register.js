@@ -43,8 +43,9 @@ $(document).ready(function(){
 				'user' : $("#userUserId").val(),
 				'name' : $("#userName").val(),
 				'email': $("#userEmail").val(),
-				'team': 'eWebOne', // @todo 수정 필요
-				'number' : '1',				
+				'team' : $("#userTeam").val(),
+				'mobile' : $("#userMobile").val(),
+				'number' : $("#gosaNumber").val(),	
 				'country': $(this).val()
 
 		};

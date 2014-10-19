@@ -257,11 +257,16 @@ module.exports = function(app, io) {
 					team 		: req.param('team'),
 					schoolNme	: req.param('schoolNme'),
 					mobile		: req.param('mobile'),
-					number		: 1 // 회차 
+					number		: req.param('number') // 회차 
+				});
+
+				RM.updateCountryAbleYn({country:req.param('country'),  ableYn: 'N'}
+						, function(e){
+							console.log(e);
+							res.json({ 'success': true });
 				});
 				
-				//res.redirect('/registerList');
-				res.json({ 'success': true });
+
 			}
 			
 		});
@@ -321,7 +326,16 @@ module.exports = function(app, io) {
 						res.json({ 'success': false });
 					} else {
 						if (obj >= 1) {
-							res.json({ 'success': true });
+							RM.updateCountryAbleYn({country:req.param('country'),  ableYn: 'Y'}
+							, function(e, obj){
+								
+								io.emit('ActiveAddRegister', {
+									country 	: req.param('country')
+								});
+								
+								res.json({ 'success': true });
+							});
+							
 						} else {
 							res.json({ 'success': false });
 						}
