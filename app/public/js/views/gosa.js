@@ -1,5 +1,14 @@
 
 $(document).ready(function(){
+	$("#gosa-form-container").hide();
+	
+	$("#btn-gosa-register").click(function(){
+		$("#gosa-form-container").show();
+	});
+	
+	$("#gosa-form-btn1").click(function(){
+		$("#gosa-form-container").hide();
+	});
 	
 	$(".gosa-change-status-btn").click(function(){
 		var number =  $(this).data("number"),

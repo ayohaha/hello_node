@@ -139,3 +139,9 @@ button i {
 ul {
   list-style: none;
 }
+#gosa-form-container {
+  top: 55px;
+  left: 20px;
+  z-index: 8;
+  position: absolute;
+}
