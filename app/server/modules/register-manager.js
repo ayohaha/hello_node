@@ -24,6 +24,8 @@ var register = db.collection('register');
 var gosainfo     = db.collection('gosainfo');
 var examhall     = db.collection('examhall');
 
+
+
 // 해당 출석고사 회차 신청지역정보 가져오기 
 exports.getAllExamHall = function(callback)
 {
@@ -33,6 +35,18 @@ exports.getAllExamHall = function(callback)
 		else callback(null, res)
 	});
 };
+
+// 고사 정보 가져오기 
+exports.getAllGosaRecords = function(callback)
+{
+	gosainfo.find().toArray(
+		function(e, res) {
+			if(e) callback(e)
+			else callback(null, res)
+		}	
+	);
+}
+
 
 // 신청한 지역 상태 변경 
 exports.updateCountryAbleYn = function(data, callback)
@@ -77,8 +91,38 @@ exports.insert = function(user, pass, callback)
 	});
 }
 
-/* record insertion, update & deletion methods */
 
+//출석고사 정보 등록 
+exports.gosaRegister = function(gosaData, callback)
+{
+	gosainfo.findOne({number:gosaData.number}, function(e, o) {
+		if (o){
+			callback('already gosa');
+		}	else{
+			gosainfo.insert(gosaData, {safe: true}, callback);		
+		}
+	});
+};
+
+//출석고사 정보 삭제 
+exports.gosaDelete = function(gosaData, callback)
+{
+	gosainfo.remove({number: gosaData.number}, function(err, numberOfRemovedDocs) {
+		callback(err, numberOfRemovedDocs);
+	});
+};
+
+//출석고사 정보 상태 변경  
+exports.gosaUpdateStatus = function(gosaData, callback)
+{	
+	gosainfo.update({number:gosaData.number}, {$set:{status:gosaData.status}}, function(err) {
+		if (err) callback(err);
+		else callback('update success');
+	});
+}
+
+
+/* record insertion, update & deletion methods */
 exports.addNewRegister = function(newData, callback)
 {
 	// 같은 회차에 동일 아이디로 신청한 이력이 있는가?
@@ -129,7 +173,8 @@ exports.updateAccount = function(newData, callback)
 //취소하기 
 exports.deleteRegister = function(RegisterData, callback)
 {
-	register.remove({user: RegisterData.user, email: RegisterData.email, country:RegisterData.country}, function(err, numberOfRemovedDocs) {
+	console.log(RegisterData);
+	register.remove({user: RegisterData.user, number: RegisterData.number, country:RegisterData.country}, function(err, numberOfRemovedDocs) {
 		callback(err, numberOfRemovedDocs);
 	});
 }

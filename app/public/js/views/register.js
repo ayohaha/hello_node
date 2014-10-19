@@ -43,16 +43,19 @@ $(document).ready(function(){
 				'user' : $("#userUserId").val(),
 				'name' : $("#userName").val(),
 				'email': $("#userEmail").val(),
-				'team': 'eWebOne',
+				'team': 'eWebOne', // @todo 수정 필요
+				'number' : '1',				
 				'country': $(this).val()
-				
+
 		};
-		console.log(register);
+
 		
 		$.post( "/register"
 				, register
 				, function( data ) {
-			  console.log( data ); 
+			  if (data.success == true) {
+				  document.location.href="/registerList";
+			  }
 			}, "json");
 	});
 	

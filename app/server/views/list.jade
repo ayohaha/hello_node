@@ -6,22 +6,26 @@ input(type='hidden', value= user._id)#userId
 
 #account-form-container
 table.table.table-hover
-    tr    
-        td 회차
-        td 아이디
-        td 이름
-        td 팀
-        td 이메일
-        td 지역
+	tr	
+		td 회차
+		td 아이디
+		td 이름
+		td 팀
+		td 이메일
+		td 지역
+		td 비고
 
-
-    each item in list
-      tr    
-        td= item.number
-        td= item.user
-        td= item.name
-        td= item.team
-        td= item.email
-        td= item.country
-
-        
+	each item in list
+		tr	
+			td= item.number
+			td= item.user
+			td= item.name
+			td= item.team
+			td= item.email
+			td= item.country
+			td
+				- if (user.user ==item.user)
+					button(type='button', value='Delete', data-number=item.number, data-user=item.user, data-country=item.country).register-delete-btn.btn.btn-danger
+						i.icon-trash.icon-white
+						| Cancel	
+				

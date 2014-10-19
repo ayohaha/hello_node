@@ -7,11 +7,13 @@ input(type='hidden', value= user.name)#userName
 input(type='hidden', value= user.user)#userUserId
 input(type='hidden', value= user.email)#userEmail
 input(type='hidden', value= user.mobile)#userMobile
+input(type='hidden', value= user.team)#userTeam
+input(type='hidden', value= gosa.number)#gosaNumber
+ul#account-form-container
+	h3=gosa.number	+ "회 출석고사 신청"
 
-table#account-form-container
-	tr
 	each hall in examhall
-		td 
+		li 
 			button.BtnAddRegister.btn.btn-warning.regiBtn(type='button',value=hall.country,data-ableYn=hall.ableYn)=hall.country
 
 

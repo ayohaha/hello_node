@@ -20,8 +20,9 @@ module.exports = function(app, io) {
 		}	else{
 	// attempt automatic login //
 			AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
+
 				if (o != null){
-				    req.session.user = o;
+					req.session.user = o;
 					res.redirect('/register');
 				}	else{
 					res.render('login', { title: 'Hello - Please Login To Your Account' });
@@ -35,7 +36,7 @@ module.exports = function(app, io) {
 			if (!o){
 				res.send(e, 400);
 			}	else{
-			    req.session.user = o;
+				req.session.user = o;
 				if (req.param('remember-me') == 'true'){
 					res.cookie('user', o.user, { maxAge: 900000 });
 					res.cookie('pass', o.pass, { maxAge: 900000 });
@@ -48,16 +49,16 @@ module.exports = function(app, io) {
 // logged-in user homepage //
 	
 	app.get('/home', function(req, res) {
-	    if (req.session.user == null){
+		if (req.session.user == null){
 	// if user is not logged-in redirect back to login page //
-	        res.redirect('/');
-	    }   else{
+			res.redirect('/');
+		}   else{
 			res.render('home', {
 				title : 'Control Panel',
 				teams : TL,
 				udata : req.session.user
 			});
-	    }
+		}
 	});
 	
 	app.post('/home', function(req, res){
@@ -66,7 +67,7 @@ module.exports = function(app, io) {
 				user 		: req.param('user'),
 				name 		: req.param('name'),
 				email 		: req.param('email'),
-				mobile    	: req.param('mobile'),
+				mobile		: req.param('mobile'),
 				team 		: req.param('team'),
 				pass		: req.param('pass')
 			}, function(e, o){
@@ -102,7 +103,7 @@ module.exports = function(app, io) {
 			user 	: req.param('user'),
 			pass	: req.param('pass'),
 			mobile  : req.param('mobile'),
-			team    : req.param('team')
+			team	: req.param('team')
 		}, function(e){
 			if (e){
 				res.send(e, 400);
@@ -177,11 +178,11 @@ module.exports = function(app, io) {
 			if (!e){
 				res.clearCookie('user');
 				res.clearCookie('pass');
-	            req.session.destroy(function(e){ res.send('ok', 200); });
+				req.session.destroy(function(e){ res.send('ok', 200); });
 			}	else{
 				res.send('record not found', 400);
 			}
-	    });
+		});
 	});
 	
 	app.get('/reset', function(req, res) {
@@ -192,38 +193,40 @@ module.exports = function(app, io) {
 	
 	
 	app.get('/register', function(req, res) {
-       if (req.session.user == null){
-    	// if user is not logged-in redirect back to login page //
-	        res.redirect('/');
-	    }   else{
-	    	//@todo 출석고사 가능한지 체크
-	    	
-	    	RM.isAllowRegister(function(obj){
+	   if (req.session.user == null){
+		// if user is not logged-in redirect back to login page //
+			res.redirect('/');
+		}   else{
+			//@todo 출석고사 가능한지 체크
+			
+			RM.isAllowRegister(function(obj){
 
-		    	if(obj.isAllowRegister === true) {
-		    		//console.log('isAllowRegister ' + isAllowRegister);
-		    		
-		    		RM.getAllExamHall(function(e, obj){
-		    			res.render('register_form', {
+				if(obj.isAllowRegister === true) {
+					//console.log('isAllowRegister ' + isAllowRegister);
+					var gosa = obj.info;
+					
+					RM.getAllExamHall(function(e, obj){
+						res.render('register_form', {
 							title: '출석고사를 신청합니다.',
 							//countries : CT,
 							examhall : obj,	
-							udata : req.session.user
+							udata : req.session.user,
+							gosa : gosa
 						});
 					
-				    });
-		    		
-		    	} else {
-		    		console.log('isAllowRegister11 ' + obj.isAllowRegister);
-		    		res.render('waiting', {
+					});
+					
+				} else {
+					console.log('isAllowRegister11 ' + obj.isAllowRegister);
+					res.render('waiting', {
 						title: 'waiting',					
 						udata : req.session.user
 					});
-		    		
-		    	}
-		    });
+					
+				}
+			});
 
-	    }
+		}
 		
 	});
 		
@@ -236,7 +239,7 @@ module.exports = function(app, io) {
 			country 	: req.param('country'),
 			team 		: req.param('team'),
 			mobile		: req.param('mobile'),
-			number		: 1 // 회차 
+			number		: req.param('number') // 회차 
 		}, function(e, obj){
 			console.log('=====================DONE============');
 			if (e || obj == undefined){
@@ -246,7 +249,6 @@ module.exports = function(app, io) {
 				console.log('Success');
 				//console.log(obj);
 				io.emit('noticeAddRegister', req.param('country') +  '성공했습니다.'	);
-				
 				io.emit('denyAddRegister', {
 					user 		: req.param('user'),
 					name 		: req.param('name'),
@@ -257,8 +259,9 @@ module.exports = function(app, io) {
 					mobile		: req.param('mobile'),
 					number		: 1 // 회차 
 				});
-			
-				res.redirect('/registerList');
+				
+				//res.redirect('/registerList');
+				res.json({ 'success': true });
 			}
 			
 		});
@@ -268,16 +271,16 @@ module.exports = function(app, io) {
 	
 	
 	app.get('/registerList', function(req, res) {
-	       if (req.session.user == null){
-	    	// if user is not logged-in redirect back to login page //
-		        res.redirect('/');
-		    }   else{		    
+			if (req.session.user == null){
+			// if user is not logged-in redirect back to login page //
+				res.redirect('/');
+			}   else{			
 
-		    	RM.isAllowRegister(function(obj){
+				RM.isAllowRegister(function(obj){
 
-			    	if(obj.isAllowRegister === true) {
-			    		//console.log('isAllowRegister ' + isAllowRegister);
-			    		
+					if(obj.isAllowRegister === true) {
+						//console.log('isAllowRegister ' + isAllowRegister);
+						
 						RM.getAllRecords(function(e, obj){
 							res.render('register_list', {
 								title: '신청리스트',
@@ -286,32 +289,129 @@ module.exports = function(app, io) {
 								udata : req.session.user
 							});
 						
-					    });		
-			    		
-			    	} else {
-			    		console.log('isAllowRegister11 ' + obj.isAllowRegister);
-			    		res.render('waiting', {
+						});		
+						
+					} else {
+						console.log('isAllowRegister11 ' + obj.isAllowRegister);
+						res.render('waiting', {
 							title: 'waiting',					
 							udata : req.session.user
 						});
-			    		
-			    	}
-			    });
-		    	
-		    	
 						
-		    }
+					}
+				});
+		
+			}
 			
 		});
+	
+	
+	app.post('/registerCancel', function(req, res){
+		if (req.session.user == null){
+			// if user is not logged-in redirect back to login page //
+			res.json({ 'success': false });
+			}else{			
+
+				RM.deleteRegister({
+					user 		: req.param('user'),
+					country 	: req.param('country'),
+					number		: req.param('number') // 회차 
+				}, function(e, obj){
+					if (e || obj == undefined){
+						res.json({ 'success': false });
+					} else {
+						if (obj >= 1) {
+							res.json({ 'success': true });
+						} else {
+							res.json({ 'success': false });
+						}
+
+					}
+				});
+			}
+	});
 	
 	app.get('/admin', function(req, res){
 		res.sendfile('./app/server/views/admin.html', {
 				udata : req.session.user
 			});
-	})
+	});
+	
+	app.post('/gosaRegister', function(req, res){
+		if (req.session.user == null) {
+			res.json({ 'success': false });
+		} else {
+			RM.gosaRegister({
+				number 		: req.param('number'),
+				startDate	: req.param('startDate'),
+				examDate 	: req.param('examDate'),
+				status		: req.param('status')
+			}, function(e, obj){
+				if (e || obj == undefined){
+					res.json({ 'success': false });
+				} else {
+					res.json({ 'success': true });
+				}
 
-	app.get('/waiting', function(req, res) { 
-		res.render('waiting', { title: 'waiting'}); 
+			});
+		}
+	});
+	
+	app.post('/gosaUpdate', function(req, res){
+		if (req.session.user == null) {
+			res.json({ 'success': false });
+		} else {
+			RM.gosaUpdateStatus({
+				number 		: req.param('number'),
+				status		: req.param('status')
+			}, function(callback){
+				if (callback != 'update success'){
+					res.json({ 'success': false });
+				} else {
+					res.json({ 'success': true });
+				}
+
+			});
+		}
+	});	
+	
+	app.post('/gosaDelete', function(req, res){
+		if (req.session.user == null) {
+			res.json({ 'success': false });
+		} else {
+			RM.gosaDelete({
+				number 		: req.param('number')
+			}, function(e, obj){
+				if (e || obj == undefined){
+					res.json({ 'success': false });
+				} else {
+					res.json({ 'success': true });
+				}
+
+			});
+		}
+	});
+	
+	app.get('/adminRegister', function(req, res){
+		   if (req.session.user == null){
+				// if user is not logged-in redirect back to login page //
+					res.redirect('/');
+				}   else{
+					RM.getAllGosaRecords(function(e, obj){
+						res.render('admin_register', {
+							title: '신청리스트',
+						//	countries : TL,
+							list : obj,
+							udata : req.session.user
+						});
+					
+					});	
+				}
+				
+			});
+
+	app.get('/waiting', function(req, res) {	
+		res.render('waiting', { title: 'waiting'});
 	});
 	
 	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });

@@ -136,7 +136,6 @@ label {
 button i {
   padding-left: 8px;
 }
-.regiBtn {
-  font-size: 100px;
-  line-height: 100px;
+ul {
+  list-style: none;
 }

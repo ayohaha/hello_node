@@ -1,0 +1,67 @@
+
+// preset form values if we receive a userdata object //
+- user = typeof(udata) != 'undefined' ? udata : { }
+// store the userId on the client side in a hidden input field //
+input(type='hidden', value= user._id)#userId
+
+#account-form-container
+table.table.table-hover
+	tr	
+		td 회차
+		td 감독신청일자
+		td 시험일자
+		td 상태
+		td 비고
+
+	each item in list
+		tr	
+			td= item.number
+			td= item.startDate
+			td= item.examDate
+			td= item.status
+			td
+				- if (item.status=='Active')
+					input(type='button', value='Deny', data-number=item.number).gosa-change-status-btn.btn.btn.btn-warning
+					input(type='button', value='Ready', data-number=item.number).gosa-change-status-btn.btn
+				- else if (item.status=='Deny')
+					input(type='button', value='Active', data-number=item.number).gosa-change-status-btn.btn.btn-primary
+					input(type='button', value='Ready', data-number=item.number).gosa-change-status-btn.btn
+				- else 
+					input(type='button', value='Active', data-number=item.number).gosa-change-status-btn.btn.btn-primary
+					input(type='button', value='Deny', data-number=item.number).gosa-change-status-btn.btn.btn-warning
+				button(type='button', value='Delete', data-number=item.number).gosa-delete-btn.btn.btn-danger
+						i.icon-trash.icon-white
+						| Delete				
+		
+#gosa-form-container
+	form( method="post", action='gosaRegister')#gosa-form.form-horizontal.well.span6
+		h1
+		p#sub1.subheading 신규 고사정보를 등록합니다.
+		hr
+		fieldset
+			#number-cg.control-group
+				label.control-label(for='number-tf') 회차
+				.controls
+					input#number-tf.input-xlarge(type='text', name='number')
+			#startDate-cg.control-group
+				label.control-label(for='startDate-tf') 감독신청일자
+				.controls
+					input#startDate-tf.input-xlarge(type='text', name='startDate', value='2014-XX-XX XX:XX:00')
+			#examDate-cg.control-group
+				label.control-label(for='examDate-tf') 시험일자
+				.controls
+					input#examDate-tf.input-xlarge(type='text', name='examDate', value='2014-XX-XX XX:XX:00')
+			#status-cg.control-group
+				label.control-label(for='status-tf') 상태
+				.controls
+					input#status-tf.input-xlarge(type='text', name='status', value='Ready')
+
+			
+			hr
+
+			.form-actions
+				button(type='button')#gosa-form-btn1.btn
+					| Cancel				
+				button(type='button')#BtnAddRegister.btn.btn-success
+					i.icon-ok.icon-white
+					| Submit				
