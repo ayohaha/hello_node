@@ -1,6 +1,6 @@
-
 $(document).ready(function(){
 	$("#gosa-form-container").hide();
+	$("#register-form-container").hide();
 	
 	$("#btn-gosa-register").click(function(){
 		$("#gosa-form-container").show();
@@ -8,6 +8,34 @@ $(document).ready(function(){
 	
 	$("#gosa-form-btn1").click(function(){
 		$("#gosa-form-container").hide();
+	});
+	
+	$("#register-form-btn1").click(function(){
+		$("#register-form-container").hide();
+	});
+	
+	$(".user-register-btn").click(function() {
+		$("#number-rf").val($(this).data("number"));
+		$("#register-form-container").show();
+	});
+	
+	$("#BtnAddUserRegister").click(function(){
+		if(!confirm("선점 등록을 진행하시겠습니까?")){
+			return false;
+		}	
+		
+		$.post( "/register"
+				, {number: $("#number-rf").val(),
+					user: $("#user-rf").val(),
+					country: $("#country-rf").val()
+				   }
+				, function( data ) {
+			  if (data.success == true) {
+				document.location.href="/adminRegister";
+			  } else if (data.success == false) {
+				  alert("실패하였습니다.");
+			  }
+			}, "json");
 	});
 	
 	$(".gosa-change-status-btn").click(function(){

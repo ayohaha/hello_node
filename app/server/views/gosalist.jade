@@ -31,7 +31,10 @@ table.table.table-hover
 					input(type='button', value='Deny', data-number=item.number).gosa-change-status-btn.btn.btn-warning
 				button(type='button', value='Delete', data-number=item.number).gosa-delete-btn.btn.btn-danger
 						i.icon-trash.icon-white
-						| Delete				
+						| Delete
+				button(type='button', value='Delete', data-number=item.number).user-register-btn.btn.btn-primary
+						i.icon-star.icon-white
+						| 선점등록
 		
 #gosa-form-container
 	form( method="post", action='gosaRegister')#gosa-form.form-horizontal.well.span6
@@ -63,5 +66,35 @@ table.table.table-hover
 				button(type='button')#gosa-form-btn1.btn
 					| Cancel				
 				button(type='button')#BtnAddRegister.btn.btn-success
+					i.icon-ok.icon-white
+					| Submit				
+					
+
+#register-form-container
+	form( method="post", action='register')#gosa-form.form-horizontal.well.span6
+		h1
+		p#sub1.subheading 출석고사 감독 선점 
+		hr
+		fieldset
+			#number-rg.control-group
+				label.control-label(for='number-rf') 회차
+				.controls
+					input#number-rf.input-xlarge(type='text', name='number-rf')
+			#user-rf-rg.control-group
+				label.control-label(for='user-rf') 사용자
+				.controls
+					input#user-rf.input-xlarge(type='text', name='user-rf')
+			#country-rg.control-group
+				label.control-label(for='country-rf') 지역
+				.controls
+					input#country-rf.input-xlarge(type='text', name='country-rf')
+
+			
+			hr
+
+			.form-actions
+				button(type='button')#register-form-btn1.btn
+					| Cancel				
+				button(type='button')#BtnAddUserRegister.btn.btn-success
 					i.icon-ok.icon-white
 					| Submit				
