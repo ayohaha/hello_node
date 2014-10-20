@@ -22,7 +22,6 @@ $(document).ready(function(){
 			} else {
 				window.location.href = '/waiting';
 			}
-				
 		},
 		error : function(e){
             lv.showLoginError('Login Failure', 'Please check your username and/or password');
