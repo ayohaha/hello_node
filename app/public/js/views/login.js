@@ -16,8 +16,12 @@ $(document).ready(function(){
 				return true;
 			}
 		},
-		success	: function(responseText, status, xhr, $form){
-			if (status == 'success') window.location.href = '/waiting';
+		success	: function(is_admin, status, xhr, $form){
+			if(is_admin == 'Y'){
+				window.location.href = '/admin';
+			} else {
+				window.location.href = '/waiting';
+			}
 		},
 		error : function(e){
             lv.showLoginError('Login Failure', 'Please check your username and/or password');
