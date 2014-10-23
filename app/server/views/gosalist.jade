@@ -21,20 +21,23 @@ table.table.table-hover
 			td= item.status
 			td
 				- if (item.status=='Active')
-					input(type='button', value='Deny', data-number=item.number).gosa-change-status-btn.btn.btn.btn-warning
+					input(type='button', value='Done', data-number=item.number).gosa-change-status-btn.btn.btn.btn-warning
 					input(type='button', value='Ready', data-number=item.number).gosa-change-status-btn.btn
-				- else if (item.status=='Deny')
+				- else if (item.status=='Done')
 					input(type='button', value='Active', data-number=item.number).gosa-change-status-btn.btn.btn-primary
 					input(type='button', value='Ready', data-number=item.number).gosa-change-status-btn.btn
 				- else 
 					input(type='button', value='Active', data-number=item.number).gosa-change-status-btn.btn.btn-primary
-					input(type='button', value='Deny', data-number=item.number).gosa-change-status-btn.btn.btn-warning
+					input(type='button', value='Done', data-number=item.number).gosa-change-status-btn.btn.btn-warning
 				button(type='button', value='Delete', data-number=item.number).gosa-delete-btn.btn.btn-danger
 						i.icon-trash.icon-white
 						| Delete
-				button(type='button', value='Delete', data-number=item.number).user-register-btn.btn.btn-primary
+				button(type='button', data-number=item.number).user-register-btn.btn.btn-primary
 						i.icon-star.icon-white
 						| 선점등록
+				button(type='button', data-number=item.number).examhall-register-btn.btn.btn-primary
+						i.icon-star-empty.icon-white
+						| 지역추가
 		
 #gosa-form-container
 	form( method="post", action='gosaRegister')#gosa-form.form-horizontal.well.span6
@@ -73,7 +76,11 @@ table.table.table-hover
 #register-form-container
 	form( method="post", action='register')#gosa-form.form-horizontal.well.span6
 		h1
-		p#sub1.subheading 출석고사 감독 선점 
+		p#sub1.subheading 출석고사 감독 선점
+		a(href='/print', target='_blank') 회원정보 
+		button(type='button')#get-country-btn1.btn
+					| 신청 가능 지역
+
 		hr
 		fieldset
 			#number-rg.control-group
@@ -98,3 +105,30 @@ table.table.table-hover
 				button(type='button')#BtnAddUserRegister.btn.btn-success
 					i.icon-ok.icon-white
 					| Submit				
+					
+
+#examhall-form-container
+	form( method="post", action='examhallRegister')#gosa-form.form-horizontal.well.span6
+		h1
+		p#sub1.subheading 지역 신청
+
+		hr
+		fieldset
+			#number-eg.control-group
+				label.control-label(for='number-ef') 회차
+				.controls
+					input#number-ef.input-xlarge(type='text', name='number-ef')
+			#country-eg.control-group
+				label.control-label(for='country-ef') 지역
+				.controls
+					input#country-ef.input-xlarge(type='text', name='country-ef')
+
+			
+			hr
+
+			.form-actions
+				button(type='button')#examhall-register-form-btn1.btn
+					| Cancel				
+				button(type='button')#BtnAddExamhallRegister.btn.btn-success
+					i.icon-ok.icon-white
+					| 지역 등록
