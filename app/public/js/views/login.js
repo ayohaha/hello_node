@@ -18,7 +18,7 @@ $(document).ready(function(){
 		},
 		success	: function(is_admin, status, xhr, $form){
 			if(is_admin == 'Y'){
-				window.location.href = '/admin';
+				window.location.href = '/adminRegister';
 			} else {
 				window.location.href = '/waiting';
 			}

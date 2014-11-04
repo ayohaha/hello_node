@@ -67,12 +67,13 @@ exports.isAllowRegister = function(callback){
 		if(o == null) {
 			callback({isAllowRegister:false});
 		} else {
-			if (o.startDate < moment().format('YYYY-MM-DD hh:mm:ss') ) {
+
+			if ( parseInt(o.startDate,10) < parseInt(moment().format('YYYYMMDDHHmmss'),10)  ) {
 				callback({isAllowRegister:true,
-					      info:o});
+					info:o});
 			} else {
-				//console.log( 'dddd' + moment().format('YYYY-MM-DD hh:mm:ss'));
-				callback({isAllowRegister:false});
+				callback({isAllowRegister:false,
+					info:o});
 			}
 		}
 

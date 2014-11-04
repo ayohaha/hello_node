@@ -1,17 +1,33 @@
-
 $(document).ready(function() {
 
-	var startTime =  "081130";
+	
+	Date.prototype.yyyymmdd = function()
+	{
+	    var yyyy = this.getFullYear().toString();
+	    var mm = (this.getMonth() + 1).toString();
+	    var dd = this.getDate().toString();
+	    var hh = this.getHours().toString();
+	    var ii = this.getMinutes().toString();
+	    var ss = this.getSeconds().toString();
+
+	    return yyyy + (mm[1] ? mm : '0'+mm[0]) + (dd[1] ? dd : '0'+dd[0]) + 
+	    (hh[1] ? hh : '0'+hh[0]) + (ii[1] ? ii : '0'+ii[0]) + (ss[1] ? ss : '0'+ss[0]);
+	}	
+	
+	var startTime =  $("#startDate").val();
 	var clock = $('.clock').FlipClock({
 		clockFace: 'TwelveHourClock'
 	    
 	});
 	
 	setInterval(function(){
-		var curTime = clock.getTime().getTime().toString().replace(/,/g,'');
-
-		if( curTime >= startTime ){
+		var now= new Date().yyyymmdd();
+	
+		if( now >= startTime ){
 			window.location.href = '/register';
 		}
 	}, 1000);
+
+
+
 });

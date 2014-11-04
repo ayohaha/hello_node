@@ -23,7 +23,7 @@ module.exports = function(app, io) {
 
 				if (o != null){
 					req.session.user = o;
-					res.redirect('/register');
+					res.redirect('/waiting');
 				}	else{
 					res.render('login', { title: 'Hello - Please Login To Your Account' });
 				}
@@ -41,7 +41,7 @@ module.exports = function(app, io) {
 					res.cookie('user', o.user, { maxAge: 900000 });
 					res.cookie('pass', o.pass, { maxAge: 900000 });
 				}
-				res.send(o, 200);
+				res.send(o.is_admin, 200);
 			}
 		});
 	});
@@ -194,21 +194,18 @@ module.exports = function(app, io) {
 	
 	app.get('/register', function(req, res) {
 	   if (req.session.user == null){
-		// if user is not logged-in redirect back to login page //
 			res.redirect('/');
 		}   else{
 			//@todo 출석고사 가능한지 체크
 			
 			RM.isAllowRegister(function(obj){
-
 				if(obj.isAllowRegister === true) {
-					//console.log('isAllowRegister ' + isAllowRegister);
+					
 					var gosa = obj.info;
 					
 					RM.getAllExamHall(function(e, obj){
 						res.render('register_form', {
 							title: '출석고사를 신청합니다.',
-							//countries : CT,
 							examhall : obj,	
 							udata : req.session.user,
 							gosa : gosa
@@ -217,12 +214,7 @@ module.exports = function(app, io) {
 					});
 					
 				} else {
-					console.log('isAllowRegister11 ' + obj.isAllowRegister);
-					res.render('waiting', {
-						title: 'waiting',					
-						udata : req.session.user
-					});
-					
+					res.redirect('/waiting');
 				}
 			});
 
@@ -230,6 +222,24 @@ module.exports = function(app, io) {
 		
 	});
 		
+	app.get('/waiting', function(req, res) {
+
+		   if (req.session.user == null){
+					res.redirect('/');
+				}   else{
+						RM.isAllowRegister(function(obj){
+							var info = obj.info;
+							if(obj.isAllowRegister === true) {
+									res.redirect('/register');
+							} else {
+								res.render('waiting', {
+									title: 'waiting',
+									startDate: info.startDate
+								});
+							}
+						});
+				}
+	});
 	
 	app.post('/register', function(req, res){
 		RM.addNewRegister({
@@ -345,12 +355,6 @@ module.exports = function(app, io) {
 			}
 	});
 	
-	app.get('/admin', function(req, res){
-		res.sendfile('./app/server/views/admin.html', {
-				udata : req.session.user
-			});
-	});
-	
 	app.post('/gosaRegister', function(req, res){
 		if (req.session.user == null) {
 			res.json({ 'success': false });
@@ -423,10 +427,6 @@ module.exports = function(app, io) {
 				}
 				
 			});
-
-	app.get('/waiting', function(req, res) {	
-		res.render('waiting', { title: 'waiting'});
-	});
 	
 	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
 
