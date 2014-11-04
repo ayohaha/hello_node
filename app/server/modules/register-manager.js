@@ -220,9 +220,9 @@ exports.validateResetLink = function(email, passHash, callback)
 	});
 }
 
-exports.getAllRecords = function(callback)
+exports.getAllRecords = function(number, callback)
 {
-	register.find().toArray(
+	register.find({number:number}).toArray(
 		function(e, res) {
 		if (e) callback(e)
 		else callback(null, res)

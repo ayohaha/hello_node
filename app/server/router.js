@@ -335,38 +335,41 @@ module.exports = function(app, io) {
 
 	
 	
-	app.get('/registerList', function(req, res) {
-			if (req.session.user == null){
-			// if user is not logged-in redirect back to login page //
-				res.redirect('/');
-			}   else{			
+	app.get('/registerList/:number', function(req, res) {
+		var number = req.param('number');
+	
+		if (req.session.user == null){
+		// if user is not logged-in redirect back to login page //
+			res.redirect('/');
+		} else{			
 
-				RM.isAllowRegister(function(obj){
+			RM.isAllowRegister(function(obj){
 
-					if(obj.isAllowRegister === true) {
-						//console.log('isAllowRegister ' + isAllowRegister);
-						
-						RM.getAllRecords(function(e, obj){
-							res.render('register_list', {
-								title: '신청리스트',
-							//	countries : TL,
-								list : obj,
-								udata : req.session.user
-							});
-						
-						});		
-						
-					} else {
-						console.log('isAllowRegister11 ' + obj.isAllowRegister);
-						res.render('waiting', {
-							title: 'waiting',					
+				if(obj.isAllowRegister === true) {
+					//console.log('isAllowRegister ' + isAllowRegister);
+					console.log(obj.info);
+					
+					RM.getAllRecords(number, function(e, obj){
+						res.render('register_list', {
+							title: '신청리스트',
+						//	countries : TL,
+							list : obj,
 							udata : req.session.user
 						});
-						
-					}
-				});
-		
-			}
+					
+					});		
+					
+				} else {
+					console.log('isAllowRegister11 ' + obj.isAllowRegister);
+					res.render('waiting', {
+						title: 'waiting',					
+						udata : req.session.user
+					});
+					
+				}
+			});
+	
+		}
 			
 		});
 	
@@ -503,6 +506,7 @@ module.exports = function(app, io) {
 				
 			});
 
+	
 	app.get('/waiting', function(req, res) {	
 		res.render('waiting', { title: 'waiting'});
 	});
