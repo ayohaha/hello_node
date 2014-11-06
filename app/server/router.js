@@ -6,25 +6,22 @@ var EM = require('./modules/email-dispatcher');
 var EH = require('./modules/examhall-list');
 
 module.exports = function(app, io) {
-	// 304-> 200
-//	app.get('/*', function(req, res, next){ 
-//		  res.setHeader('Last-Modified', (new Date()).toUTCString());
-//		  next(); 
-//		});
 
-	// main login page //
 	app.get('/', function(req, res){
-	// check if the user's credentials are saved in a cookie //
-		if (req.cookies.user == undefined || req.cookies.pass == undefined){
+		
+		if (req.cookies.user == undefined){
 			res.render('login', { title: 'Hello - Please Login To Your Account' });
 		}	else{
-	// attempt automatic login //
+			
 			AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
-
 				if (o != null){
 					req.session.user = o;
-					res.redirect('/waiting');
-				}	else{
+					if(o.is_admin == 'Y'){
+						res.redirect('/waiting');
+					} else {
+						res.redirect('/adminRegister');
+					}
+				} else {
 					res.render('login', { title: 'Hello - Please Login To Your Account' });
 				}
 			});
@@ -37,10 +34,7 @@ module.exports = function(app, io) {
 				res.send(e, 400);
 			}	else{
 				req.session.user = o;
-				if (req.param('remember-me') == 'true'){
-					res.cookie('user', o.user, { maxAge: 900000 });
-					res.cookie('pass', o.pass, { maxAge: 900000 });
-				}
+				res.cookie('user', o.user, { maxAge: 900000 });
 				res.send(o.is_admin, 200);
 			}
 		});
