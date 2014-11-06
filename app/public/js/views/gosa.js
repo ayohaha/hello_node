@@ -19,23 +19,29 @@ $(document).ready(function(){
 		$("#register-form-container").hide();
 	});
 	
+	$(".register-list-btn").click(function() {
+		location.href="/registerList/"+ $(this).data("number");
+	});
+	
 	$(".user-register-btn").click(function() {
 		$("#number-rf").val($(this).data("number"));
 		$("#register-form-container").show();
 	});
 	
 	$("#get-country-btn1").click(function() {
-		$.post( "/getAbleCountry"
-				, {number: $("#number-rf").val()
-				   }
-				, function( data ) {
-console.log(data);
-			}, "json");
+		alert('신청가능지역');
 	});
 	
 	
 	$(".examhall-register-btn").click(function() {
 		$("#number-ef").val($(this).data("number"));
+		// 회차별 신청 가능한 지역 가져오기
+		$.get( "/examhallList/" + $("#number-ef").val()
+				, function( data ) {
+
+				console.log(data);
+			}, "json");
+		
 		$("#examhall-form-container").show();
 	});
 	
@@ -119,18 +125,17 @@ console.log(data);
 				'startDate' : $("#startDate-tf").val(),
 				'examDate'  : $("#examDate-tf").val(),
 				'status'    : $("#status-tf").val()
-				
 		};
 		
 		$.post( "/gosaRegister"
 				, register
 				, function( data ) {
 
-			  if (data.success == true) {
-				  document.location.href="/adminRegister";
-			  } else if (data.success == false) {
-				  alert("실패하였습니다.");
-			  }
+				if (data.success == true) {
+				location.href="/adminRegister";
+				} else if (data.success == false) {
+				alert("실패하였습니다.");
+				}
 			}, "json");
 	});
-})
+});

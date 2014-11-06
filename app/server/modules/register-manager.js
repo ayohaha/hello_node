@@ -27,9 +27,9 @@ var examhall     = db.collection('examhall');
 
 
 // 해당 출석고사 회차 신청지역정보 가져오기 
-exports.getAllExamHall = function(callback)
+exports.getAllExamHall = function(number, callback)
 {
-	examhall.find().toArray(
+	examhall.find({number:number}).toArray(
 		function(e, res) {
 		if (e) callback(e)
 		else callback(null, res)

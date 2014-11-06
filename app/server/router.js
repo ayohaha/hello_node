@@ -205,7 +205,7 @@ module.exports = function(app, io) {
 					//console.log('isAllowRegister ' + isAllowRegister);
 					var gosa = obj.info;
 					
-					RM.getAllExamHall(function(e, obj){
+					RM.getAllExamHall(obj.info.number, function(e, obj){
 						res.render('register_form', {
 							title: '출석고사를 신청합니다.',
 							//countries : CT,
@@ -373,6 +373,11 @@ module.exports = function(app, io) {
 			
 		});
 	
+	app.get('/examhallList/:number', function(req, res) {
+		RM.getAllExamHall(req.param('number'), function(e, obj){
+			res.json({ examhall : obj });
+		});
+	});
 	
 	app.post('/registerCancel', function(req, res){
 		if (req.session.user == null){
@@ -514,4 +519,4 @@ module.exports = function(app, io) {
 	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
 
 	
-};
+}
