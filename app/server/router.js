@@ -240,6 +240,65 @@ module.exports = function(app, io) {
 						});
 				}
 	});
+	app.post('/getAbleCountry', function(req, res){
+		
+		// 회차를 이용하여 신청 가능한 지역 정보 가져오기
+		RM.getAbleExamHall(req.param('number'), function(e, obj){
+			console.log('=====================number============');
+			console.log(e);
+			console.log('=====================obj============');
+			console.log(obj);
+		});
+	});
+	
+	app.post('/proxyRegister', function(req, res){
+		//1. user 조회 하여 이름, 이메일, 팀, 전화번호를 조회
+		AM.getUserRecord(req.param('user'), function(e, obj){
+			if(e || obj ==undefined) {
+				console.log('INVALID USER');
+				res.json({ 'success': false });
+			} else {
+				//2. addNewRegister
+				var register = {
+					user 		: req.param('user'),
+					name 		: obj.name,
+					email 		: obj.email,
+					country 	: req.param('country'),
+					team 		: obj.team,
+					mobile		: obj.mobile,
+					number		: req.param('number') // 회차 
+				};
+
+			
+				RM.addNewRegister(register, function(e, obj){
+					console.log('=====================DONE============');
+					if (e || obj == undefined){
+						console.log('Fail::' + e);
+						io.emit('noticeAddRegister', '실패했습니다.');
+						res.json({ 'success': false });
+					} else {
+						console.log('Success');
+						//console.log(obj);
+						io.emit('noticeAddRegister', req.param('country') +  '성공했습니다.'	);
+						io.emit('denyAddRegister', register);
+
+						RM.updateCountryAbleYn({country:req.param('country'),  ableYn: 'N'}
+								, function(e){
+									console.log(e);
+									res.json({ 'success': true });
+						});
+						
+
+					}
+					
+				});
+			}
+		});
+		
+		
+		
+		
+	});
 	
 	app.post('/register', function(req, res){
 		RM.addNewRegister({
@@ -255,6 +314,7 @@ module.exports = function(app, io) {
 			if (e || obj == undefined){
 				console.log('Fail::' + e);
 				io.emit('noticeAddRegister', '실패했습니다.');
+				res.json({ 'success': false });
 			} else {
 				console.log('Success');
 				//console.log(obj);
@@ -285,38 +345,41 @@ module.exports = function(app, io) {
 
 	
 	
-	app.get('/registerList', function(req, res) {
-			if (req.session.user == null){
-			// if user is not logged-in redirect back to login page //
-				res.redirect('/');
-			}   else{			
+	app.get('/registerList/:number', function(req, res) {
+		var number = req.param('number');
+	
+		if (req.session.user == null){
+		// if user is not logged-in redirect back to login page //
+			res.redirect('/');
+		} else{			
 
-				RM.isAllowRegister(function(obj){
+			RM.isAllowRegister(function(obj){
 
-					if(obj.isAllowRegister === true) {
-						//console.log('isAllowRegister ' + isAllowRegister);
-						
-						RM.getAllRecords(function(e, obj){
-							res.render('register_list', {
-								title: '신청리스트',
-							//	countries : TL,
-								list : obj,
-								udata : req.session.user
-							});
-						
-						});		
-						
-					} else {
-						console.log('isAllowRegister11 ' + obj.isAllowRegister);
-						res.render('waiting', {
-							title: 'waiting',					
+				if(obj.isAllowRegister === true) {
+					//console.log('isAllowRegister ' + isAllowRegister);
+					console.log(obj.info);
+					
+					RM.getAllRecords(number, function(e, obj){
+						res.render('register_list', {
+							title: '신청리스트',
+						//	countries : TL,
+							list : obj,
 							udata : req.session.user
 						});
-						
-					}
-				});
-		
-			}
+					
+					});		
+					
+				} else {
+					console.log('isAllowRegister11 ' + obj.isAllowRegister);
+					res.render('waiting', {
+						title: 'waiting',					
+						udata : req.session.user
+					});
+					
+				}
+			});
+	
+		}
 			
 		});
 	
@@ -375,6 +438,25 @@ module.exports = function(app, io) {
 		}
 	});
 	
+	
+	app.post('/examhallRegister', function(req, res){
+		if (req.session.user == null) {
+			res.json({ 'success': false });
+		} else {
+			RM.examhallRegister({
+					number 		: req.param('number'),
+					country  	: req.param('country')
+				}, function(e, obj){
+				if (e || obj == undefined){
+					res.json({ 'success': false });
+				} else {
+					res.json({ 'success': true });
+				}
+
+			});
+		}
+	});
+	
 	app.post('/gosaUpdate', function(req, res){
 		if (req.session.user == null) {
 			res.json({ 'success': false });
@@ -401,7 +483,7 @@ module.exports = function(app, io) {
 				number 		: req.param('number')
 			}, function(e, obj){
 				if (e || obj == undefined){
-					res.json({ 'success': false });
+					res.json({ 'success': false});
 				} else {
 					res.json({ 'success': true });
 				}

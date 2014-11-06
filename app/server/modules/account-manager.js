@@ -146,6 +146,14 @@ exports.getAllRecords = function(callback)
 	});
 };
 
+exports.getUserRecord = function(user, callback)
+{
+	accounts.findOne({user:user}, function(e, res) {
+		if (e) callback(e)
+		else callback(null, res)
+	});
+};
+
 exports.delAllRecords = function(callback)
 {
 	accounts.remove({}, callback); // reset accounts collection for testing //

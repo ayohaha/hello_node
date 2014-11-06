@@ -36,6 +36,18 @@ exports.getAllExamHall = function(callback)
 	});
 };
 
+//해당 출석고사 회차 신청 가능 지역정보 가져오기 
+exports.getAbleExamHall = function(number, callback)
+{
+	
+	examhall.find({number:number, ableYn:'Y'}).toArray(
+			function(e, res) {
+			if (e) callback(e)
+			else callback(null, res)
+		});
+}
+
+
 // 고사 정보 가져오기 
 exports.getAllGosaRecords = function(callback)
 {
@@ -91,6 +103,23 @@ exports.insert = function(user, pass, callback)
 		}
 	});
 }
+
+// 고사 등록 
+exports.examhallRegister = function(data, callback)
+{
+	examhall.findOne({number:data.number, country:data.country}, function(e, o) {
+		if (o){
+			callback('already examhall');
+		}	else{
+			var gosaData = {
+					'number'  : data.number,
+					'country' : data.country,
+					'ableYn'  : 'Y'
+			};
+			examhall.insert(gosaData, {safe: true}, callback);		
+		}
+	});
+};
 
 
 //출석고사 정보 등록 
@@ -192,9 +221,9 @@ exports.validateResetLink = function(email, passHash, callback)
 	});
 }
 
-exports.getAllRecords = function(callback)
+exports.getAllRecords = function(number, callback)
 {
-	register.find().toArray(
+	register.find({number:number}).toArray(
 		function(e, res) {
 		if (e) callback(e)
 		else callback(null, res)

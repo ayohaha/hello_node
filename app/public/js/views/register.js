@@ -55,7 +55,7 @@ $(document).ready(function(){
 				, register
 				, function( data ) {
 			  if (data.success == true) {
-				  document.location.href="/registerList";
+				  document.location.href="/registerList/" + $("#gosaNumber").val();
 			  }
 			}, "json");
 	});

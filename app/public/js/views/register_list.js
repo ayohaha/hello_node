@@ -27,7 +27,7 @@ $(document).ready(function(){
 			user = $(this).data("user"),
 			country = $(this).data("country");
 		
-		if(!confirm(number + " user::" + user + " country::" + country + "회를 삭제를 진행하시겠습니까?")){
+		if(!confirm("삭제를 진행하시겠습니까?")){
 			return false;
 		}
 

@@ -1,6 +1,11 @@
 $(document).ready(function(){
 	$("#gosa-form-container").hide();
 	$("#register-form-container").hide();
+	$("#examhall-form-container").hide();
+	
+	$("#examhall-register-form-btn1").click(function(){
+		$("#examhall-form-container").hide();
+	});
 	
 	$("#btn-gosa-register").click(function(){
 		$("#gosa-form-container").show();
@@ -19,12 +24,42 @@ $(document).ready(function(){
 		$("#register-form-container").show();
 	});
 	
+	$("#get-country-btn1").click(function() {
+		$.post( "/getAbleCountry"
+				, {number: $("#number-rf").val()
+				   }
+				, function( data ) {
+console.log(data);
+			}, "json");
+	});
+	
+	
+	$(".examhall-register-btn").click(function() {
+		$("#number-ef").val($(this).data("number"));
+		$("#examhall-form-container").show();
+	});
+	
+	$("#BtnAddExamhallRegister").click(function() {
+		$.post( "/examhallRegister"
+				, {number: $("#number-ef").val(),
+					country: $("#country-ef").val()
+				   }
+				, function( data ) {
+			  if (data.success == true) {
+				document.location.href="/adminRegister";
+			  } else if (data.success == false) {
+				  alert("이미 등록되었습니다.");
+			  }
+			}, "json");
+	});
+	
+	
 	$("#BtnAddUserRegister").click(function(){
 		if(!confirm("선점 등록을 진행하시겠습니까?")){
 			return false;
 		}	
 		
-		$.post( "/register"
+		$.post( "/proxyRegister"
 				, {number: $("#number-rf").val(),
 					user: $("#user-rf").val(),
 					country: $("#country-rf").val()
@@ -86,7 +121,6 @@ $(document).ready(function(){
 				'status'    : $("#status-tf").val()
 				
 		};
-
 		
 		$.post( "/gosaRegister"
 				, register
