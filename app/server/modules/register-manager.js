@@ -80,7 +80,7 @@ exports.isAllowRegister = function(callback){
 			callback({isAllowRegister:false});
 		} else {
 
-			if ( parseInt(o.startDate,10) < parseInt(moment().format('YYYYMMDDHHmmss'),10)  ) {
+			if ( o.startDate < moment().format('YYYY-MM-DD HH:mm:ss')  ) {
 				callback({isAllowRegister:true,
 					info:o});
 			} else {
@@ -144,7 +144,7 @@ exports.gosaDelete = function(gosaData, callback)
 
 //출석고사 정보 상태 변경  
 exports.gosaUpdateStatus = function(gosaData, callback)
-{	
+{	console.log(gosaData.number+'::'+gosaData.status);
 	gosainfo.update({number:gosaData.number}, {$set:{status:gosaData.status}}, function(err) {
 		if (err) callback(err);
 		else callback('update success');

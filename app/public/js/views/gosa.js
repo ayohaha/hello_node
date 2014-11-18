@@ -91,6 +91,7 @@ $(document).ready(function(){
 				, {number: number, status: status}
 				, function( data ) {
 			  if (data.success == true) {
+				  console.log(data.success);
 				document.location.href="/adminRegister";
 			  } else if (data.success == false) {
 				  alert("실패하였습니다.");

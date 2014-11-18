@@ -464,6 +464,7 @@ module.exports = function(app, io) {
 				number 		: req.param('number'),
 				status		: req.param('status')
 			}, function(callback){
+				console.log(callback);
 				if (callback != 'update success'){
 					res.json({ 'success': false });
 				} else {
