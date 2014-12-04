@@ -30,14 +30,12 @@ block scripts
 		sockets.on('init',function(msg){
 		alert(msg.msg)
 		})
-		console.log('message:~');
 
 		sockets.on('noticeAddRegister', function(msg){
 			$("#noticeAddRegister").html(msg);
 		});
 
 		sockets.on('redirectPage', function(result){
-			alert(result.msg);
 			document.location.href=result.page;
 		});
 		sockets.on('ActiveAddRegister', function(result){	

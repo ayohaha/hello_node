@@ -228,21 +228,10 @@ module.exports = function(app, io) {
 							} else {
 								res.render('waiting', {
 									title: 'waiting',
-									startDate: info.startDate
 								});
 							}
 						});
 				}
-	});
-	app.post('/getAbleCountry', function(req, res){
-		
-		// 회차를 이용하여 신청 가능한 지역 정보 가져오기
-		RM.getAbleExamHall(req.param('number'), function(e, obj){
-			console.log('=====================number============');
-			console.log(e);
-			console.log('=====================obj============');
-			console.log(obj);
-		});
 	});
 	
 	app.post('/proxyRegister', function(req, res){
@@ -347,30 +336,14 @@ module.exports = function(app, io) {
 			res.redirect('/');
 		} else{			
 
-			RM.isAllowRegister(function(obj){
-
-				if(obj.isAllowRegister === true) {
-					//console.log('isAllowRegister ' + isAllowRegister);
-					console.log(obj.info);
-					
-					RM.getAllRecords(number, function(e, obj){
-						res.render('register_list', {
-							title: '신청리스트',
-						//	countries : TL,
-							list : obj,
-							udata : req.session.user
-						});
-					
-					});		
-					
-				} else {
-					console.log('isAllowRegister11 ' + obj.isAllowRegister);
-					res.render('waiting', {
-						title: 'waiting',					
-						udata : req.session.user
-					});
-					
-				}
+			RM.getAllRecords(number, function(e, obj){
+				res.render('register_list', {
+					title: '신청리스트',
+				//	countries : TL,
+					list : obj,
+					udata : req.session.user
+				});
+			
 			});
 	
 		}
@@ -464,11 +437,18 @@ module.exports = function(app, io) {
 				number 		: req.param('number'),
 				status		: req.param('status')
 			}, function(callback){
-				console.log(callback);
 				if (callback != 'update success'){
 					res.json({ 'success': false });
 				} else {
 					res.json({ 'success': true });
+					if (req.param('status') == 'Active') {
+						var _result = '/register';
+					} else {
+						var _result = '/registerList/'+req.param('number');
+					}
+					io.emit('redirectPage', {
+						page 	: _result
+					});
 				}
 
 			});
