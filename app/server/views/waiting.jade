@@ -9,8 +9,13 @@ html
 		script(src='/vendor/bootstrap-transition.js')	
 		script(src='/vendor/flipclock.js')
 		script(src='/js/views/waiting.js')
-	
+		script(src="/socket.io/socket.io.js")	
 	body
-		input(type='hidden', value= startDate)#startDate
 		div.clock
 
+	script.
+		var sockets = io.connect()
+
+		sockets.on('redirectPage', function(result){
+			document.location.href=result.page;
+		});	
