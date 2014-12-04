@@ -347,29 +347,6 @@ module.exports = function(app, io) {
 			res.redirect('/');
 		} else{			
 
-			RM.isAllowRegister(function(obj){
-
-				if(obj.isAllowRegister === true) {
-					//console.log('isAllowRegister ' + isAllowRegister);
-					console.log(obj.info);
-					
-					RM.getAllRecords(number, function(e, obj){
-						res.render('register_list', {
-							title: '신청리스트',
-						//	countries : TL,
-							list : obj,
-							udata : req.session.user
-						});
-					
-					});		
-					
-				} else {
-					res.render('waiting', {
-						title: 'waiting',
-						udata : req.session.user
-					});
-				
-				}
 			RM.getAllRecords(number, function(e, obj){
 				res.render('register_list', {
 					title: '신청리스트',
@@ -378,11 +355,9 @@ module.exports = function(app, io) {
 					udata : req.session.user
 				});
 			
-			});
-	
+			});	
 		}
-			
-		});
+	});
 	
 	app.get('/examhallList/:number', function(req, res) {
 		RM.getAllExamHall(req.param('number'), function(e, obj){
