@@ -49,9 +49,6 @@ io.on('connection', function(socket){
 			
 		});
 		
-		socket.on('disconnect', function(){
-			console.log('user disconnected');
-		});
 	});
 require('./app/server/router')(app, io);
 

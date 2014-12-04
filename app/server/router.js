@@ -17,9 +17,9 @@ module.exports = function(app, io) {
 				if (o != null){
 					req.session.user = o;
 					if(o.is_admin == 'Y'){
-						res.redirect('/waiting');
-					} else {
 						res.redirect('/adminRegister');
+					} else {
+						res.redirect('/waiting');
 					}
 				} else {
 					res.render('login', { title: 'Hello - Please Login To Your Account' });
@@ -200,7 +200,7 @@ module.exports = function(app, io) {
 					RM.getAllExamHall(obj.info.number, function(e, obj){
 						res.render('register_form', {
 							title: '출석고사를 신청합니다.',
-							examhall : obj,	
+							examhall : obj,
 							udata : req.session.user,
 							gosa : gosa
 						});
@@ -224,11 +224,21 @@ module.exports = function(app, io) {
 						RM.isAllowRegister(function(obj){
 							var info = obj.info;
 							if(obj.isAllowRegister === true) {
-									res.redirect('/register');
+								var data = {
+									user : req.session.user.name,
+									number : info.number
+								};
+								RM.checkRegister(data, function(r){
+									if( r == 'Y'){
+										res.redirect('/registerList/'+info.number);
+									} else{
+										res.redirect('/register');
+									}
+								});
+									
 							} else {
 								res.render('waiting', {
 									title: 'waiting',
-									startDate: info.startDate
 								});
 							}
 						});
@@ -364,12 +374,11 @@ module.exports = function(app, io) {
 					});		
 					
 				} else {
-					console.log('isAllowRegister11 ' + obj.isAllowRegister);
 					res.render('waiting', {
-						title: 'waiting',					
+						title: 'waiting',
 						udata : req.session.user
 					});
-					
+				
 				}
 			});
 	
@@ -464,8 +473,8 @@ module.exports = function(app, io) {
 				number 		: req.param('number'),
 				status		: req.param('status')
 			}, function(callback){
-				console.log(callback);
 				if (callback != 'update success'){
+					io.emit('denyAddRegister', register);
 					res.json({ 'success': false });
 				} else {
 					res.json({ 'success': true });
@@ -500,7 +509,6 @@ module.exports = function(app, io) {
 					RM.getAllGosaRecords(function(e, obj){
 						res.render('admin_register', {
 							title: '신청리스트',
-						//	countries : TL,
 							list : obj,
 							udata : req.session.user
 						});

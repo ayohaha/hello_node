@@ -144,7 +144,7 @@ exports.gosaDelete = function(gosaData, callback)
 
 //출석고사 정보 상태 변경  
 exports.gosaUpdateStatus = function(gosaData, callback)
-{	console.log(gosaData.number+'::'+gosaData.status);
+{
 	gosainfo.update({number:gosaData.number}, {$set:{status:gosaData.status}}, function(err) {
 		if (err) callback(err);
 		else callback('update success');
@@ -166,7 +166,8 @@ exports.addNewRegister = function(newData, callback)
 					callback('already country');
 				}	else{
 					newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-					register.insert(newData, {safe: true}, callback);				}
+					register.insert(newData, {safe: true}, callback);				
+					}
 			});
 				
 
@@ -174,6 +175,17 @@ exports.addNewRegister = function(newData, callback)
 	});
 }
 
+exports.checkRegister = function(data, callback)
+{
+	// 같은 회차에 동일 아이디로 신청한 이력이 있는가?
+	register.findOne({user:data.user, number:data.number}, function(e, o) {
+		if (o){
+			callback('Y');
+		}	else{
+			callback('N');		
+		}
+	});
+}
 
 
 exports.updateAccount = function(newData, callback)
