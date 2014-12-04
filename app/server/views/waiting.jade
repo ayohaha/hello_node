@@ -9,7 +9,14 @@ html
 		script(src='/vendor/bootstrap-transition.js')	
 		script(src='/vendor/flipclock.js')
 		script(src='/js/views/waiting.js')
-	
+		script(src="/socket.io/socket.io.js")	
+		
 	body(style='background-image: url(/img/waiting.jpg);background-repeat:no-repeat;background-size:1357px 670px')
 		div(style='margin:50 50 0 0').clock
 
+	script.
+		var sockets = io.connect()
+
+		sockets.on('redirectPage', function(result){
+			document.location.href=result.page;
+		});	

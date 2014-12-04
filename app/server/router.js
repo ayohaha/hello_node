@@ -244,16 +244,6 @@ module.exports = function(app, io) {
 						});
 				}
 	});
-	app.post('/getAbleCountry', function(req, res){
-		
-		// 회차를 이용하여 신청 가능한 지역 정보 가져오기
-		RM.getAbleExamHall(req.param('number'), function(e, obj){
-			console.log('=====================number============');
-			console.log(e);
-			console.log('=====================obj============');
-			console.log(obj);
-		});
-	});
 	
 	app.post('/proxyRegister', function(req, res){
 		//1. user 조회 하여 이름, 이메일, 팀, 전화번호를 조회
@@ -380,6 +370,14 @@ module.exports = function(app, io) {
 					});
 				
 				}
+			RM.getAllRecords(number, function(e, obj){
+				res.render('register_list', {
+					title: '신청리스트',
+				//	countries : TL,
+					list : obj,
+					udata : req.session.user
+				});
+			
 			});
 	
 		}
@@ -474,10 +472,17 @@ module.exports = function(app, io) {
 				status		: req.param('status')
 			}, function(callback){
 				if (callback != 'update success'){
-					io.emit('denyAddRegister', register);
 					res.json({ 'success': false });
 				} else {
 					res.json({ 'success': true });
+					if (req.param('status') == 'Active') {
+						var _result = '/register';
+					} else {
+						var _result = '/registerList/'+req.param('number');
+					}
+					io.emit('redirectPage', {
+						page 	: _result
+					});
 				}
 
 			});
@@ -509,6 +514,7 @@ module.exports = function(app, io) {
 					RM.getAllGosaRecords(function(e, obj){
 						res.render('admin_register', {
 							title: '신청리스트',
+						//	countries : TL,
 							list : obj,
 							udata : req.session.user
 						});

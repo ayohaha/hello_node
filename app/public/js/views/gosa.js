@@ -28,18 +28,21 @@ $(document).ready(function(){
 		$("#register-form-container").show();
 	});
 	
-	$("#get-country-btn1").click(function() {
-		alert('신청가능지역');
-	});
 	
 	
 	$(".examhall-register-btn").click(function() {
 		$("#number-ef").val($(this).data("number"));
+		
+		var phase = '';
+		$("#examList").html('');
 		// 회차별 신청 가능한 지역 가져오기
 		$.get( "/examhallList/" + $("#number-ef").val()
-				, function( data ) {
-
-				console.log(data);
+				, function( data ) {	
+				jQuery.each( data.examhall, function( i, val ) {
+					phase = "<li>"+val['country']+"</li>";
+					// 리스트~~
+					$("#examList").append(phase);
+				});
 			}, "json");
 		
 		$("#examhall-form-container").show();

@@ -31,15 +31,9 @@ block scripts
 		sockets.on('init',function(msg){
 			alert(msg.msg);
 		})
-		console.log('message:~');
 
 		sockets.on('noticeAddRegister', function(msg){
 			console.log(msg);
 			$("#noticeAddRegister").append(msg.msg);
 		});
 	
-	
-		sockets.on('redirectPage', function(result){
-			alert(result.msg);
-			document.location.href=result.page;
-		});	

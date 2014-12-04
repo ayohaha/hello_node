@@ -42,7 +42,7 @@ table.table.table-hover
 						i.icon-search.icon-white
 						| 신청결과보기
 		
-#gosa-form-container
+#gosa-form-container(style='display: none;')
 	form( method="post", action='gosaRegister')#gosa-form.form-horizontal.well.span6
 		h1
 		p#sub1.subheading 신규 고사정보를 등록합니다.
@@ -79,13 +79,11 @@ table.table.table-hover
 					| Submit				
 					
 
-#register-form-container
+#register-form-container(style='display: none;')
 	form( method="post", action='register')#gosa-form.form-horizontal.well.span6
 		h1
 		p#sub1.subheading 출석고사 감독 선점
 		a(href='/print', target='_blank') 회원정보 
-		button(type='button')#get-country-btn1.btn
-					| 신청 가능 지역
 
 		hr
 		fieldset
@@ -94,14 +92,25 @@ table.table.table-hover
 				.controls
 					input#number-rf.input-xlarge(type='text', name='number-rf')
 			#user-rf-rg.control-group
-				label.control-label(for='user-rf') 사용자
+				label.control-label(for='user-rf') user
 				.controls
 					input#user-rf.input-xlarge(type='text', name='user-rf')
+			#name-rf-rg.control-group
+				label.control-label(for='name-rf') name
+				.controls
+					input#name-rf.input-xlarge(type='text', name='name-rf')
+			#email-rf-rg.control-group
+				label.control-label(for='email-rf') email
+				.controls
+					input#email-rf.input-xlarge(type='text', name='email-rf')
 			#country-rg.control-group
 				label.control-label(for='country-rf') 지역
 				.controls
 					input#country-rf.input-xlarge(type='text', name='country-rf')
-
+			#team-rf-rg.control-group
+				label.control-label(for='team-rf') team
+				.controls
+					input#team-rf.input-xlarge(type='text', name='team-rf')
 			
 			hr
 
@@ -113,16 +122,12 @@ table.table.table-hover
 					| Submit				
 					
 
-#examhall-form-container
+#examhall-form-container(style='display: none;')
 	form( method="post", action='examhallRegister')#gosa-form.form-horizontal.well.span6
 		h1
 		p#sub1.subheading 지역 신청
 	
-		di#examList
-			ul
-				li test
-				li test1
-				li test2
+		div#examList
 
 		hr
 		fieldset
