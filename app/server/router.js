@@ -370,19 +370,13 @@ module.exports = function(app, io) {
 					});
 				
 				}
-			RM.getAllRecords(number, function(e, obj){
-				res.render('register_list', {
-					title: '신청리스트',
-				//	countries : TL,
-					list : obj,
-					udata : req.session.user
-				});
+
 			
-			});
-	
-		}
+			}
 			
 		});
+			
+
 	
 	app.get('/examhallList/:number', function(req, res) {
 		RM.getAllExamHall(req.param('number'), function(e, obj){
