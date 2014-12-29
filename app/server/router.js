@@ -340,22 +340,28 @@ module.exports = function(app, io) {
 	
 	
 	app.get('/registerList/:number', function(req, res) {
-		var number = req.param('number');
-	
+		var number = req.param('number'),
+			isAllowUpdate = '';
+		
+		
 		if (req.session.user == null){
 		// if user is not logged-in redirect back to login page //
 			res.redirect('/');
 		} else{			
-
-			RM.getAllRecords(number, function(e, obj){
-				res.render('register_list', {
-					title: '신청리스트',
-				//	countries : TL,
-					list : obj,
-					udata : req.session.user
-				});
+			RM.getGosaInfoStatus(number, function(status){
+				isAllowUpdate = status.isAllowUpdate;
+				RM.getAllRecords(number, function(e, obj){
+					res.render('register_list', {
+						title: '신청리스트',
+						list : obj,
+						isAllowUpdate: isAllowUpdate,
+						udata : req.session.user
+					});
+				
+				});			
+			});
 			
-			});	
+
 		}
 	});
 	

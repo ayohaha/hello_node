@@ -24,7 +24,7 @@ table.table.table-hover
 			td= item.email
 			td= item.country
 			td
-				- if (user.user ==item.user)
+				- if (isAllowUpdate == 'Y' && user.user ==item.user)
 					button(type='button', value='Delete', data-number=item.number, data-user=item.user, data-country=item.country).register-delete-btn.btn.btn-danger
 						i.icon-trash.icon-white
 						| Cancel	

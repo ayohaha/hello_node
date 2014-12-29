@@ -93,6 +93,21 @@ exports.isAllowRegister = function(callback){
 	
 }
 
+// 고사 상태 확인
+exports.getGosaInfoStatus = function(number, callback){
+	gosainfo.findOne({number:number, status:'Done'}, function(e, o){
+		if (e){
+			callback({isAllowUpdate:'N'});
+		}
+		
+		if(o) {
+			callback({isAllowUpdate:'N'});		
+		} else {
+			callback({isAllowUpdate:'Y'});
+		}
+	});	
+}
+
 exports.insert = function(user, pass, callback)
 {
 	register.findOne({user:user}, function(e, o) {
